@@ -8,25 +8,19 @@ import (
 	"text/template"
 
 	"github.com/kasra1997/test/config"
+	"github.com/kasra1997/test/models"
 )
 
-type TemplateData struct {
-	StringMap map[string]string
-	IntMap    map[string]int
-	Floatmap  map[string]float64
-	Data      map[string]interface{}
-	CsrfToken string
-	Flash     string
-	Warning   string
-	Error     string
-}
-
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-	RenderTemplate(w, "home.page.html", &TemplateData{})
+	RenderTemplate(w, "home.page.html", &models.TemplateData{})
 }
 
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-	RenderTemplate(w, "about.page.html", &TemplateData{})
+	strmap := make(map[string]string)
+	strmap["tt"] = "this came from template value trasmision "
+	RenderTemplate(w, "about.page.html", &models.TemplateData{
+		StringMap: strmap,
+	})
 }
 
 var app *config.AppConfig
@@ -57,7 +51,7 @@ func Newhandler(r *Repository) {
 }
 
 //////////RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRender render render render render render render render render render part is here
-func RenderTemplate(w http.ResponseWriter, tmpl string, td *TemplateData) {
+func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
 	var t map[string]*template.Template
 	if app.UseCache {
 		t = app.Templatecache
